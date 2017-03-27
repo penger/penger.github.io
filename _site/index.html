@@ -4,8 +4,8 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content="强学力行、顺势而为 - 潘学文个人博客 - 作者:潘学文"/>
-    <title>强学力行、顺势而为 - 潘学文个人博客</title>
+    <meta name="description" content="野生猪八戒 - 潘学文个人博客 - 作者:潘学文"/>
+    <title>野生猪八戒 - 潘学文个人博客</title>
     <!-- Bootstrap Core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet"/>
     <!-- Custom CSS -->
@@ -107,44 +107,53 @@
           <!-- Loop output paged posts -->
 
 <h2>
-  <a href="/posts/which-more-important.html">
-    人生什么更重要？[测试]
+  <a href="/posts/spark-analysis-text-to-hive.html">
+    spark-analysis-text-to-hive
   </a> 
   <div class="post-date">
 	<span class="glyphicon glyphicon-time"></span>
-	2010-01-01
+	2017-03-27
   </div>
 </h2>
 <hr>
-<h3 id="哪个更重要">哪个更重要？</h3>
-
-<blockquote>
-  <p>方向比努力重要，<br />
-身体比金钱重要，<br />
-生活比文凭重要，<br />
-情商比智商重要，<br />
-能力比知识重要，<br />
-行动比（愿望）空想重要。</p>
-</blockquote>
-
-<h3 id="一生最重要的7项资产">一生最重要的7项资产</h3>
-<pre><code>1，健康：人类的第一资产，  
-2，财富：资产的最重要诠释，  
-3，智慧：改变命运的资本，  
-4，婚姻与家庭：身心的避风港，  
-5，心灵：深查世界的棱镜，  
-6，友谊：一生快乐源泉，  
-7，人生的意义：成长的源动力。  
+<h3 id="需求">需求</h3>
+<h2 id="分隔文件中的电话号码字段然后将一行拆为多行的代码实现">分隔文件中的电话号码字段,然后将一行拆为多行的代码实现</h2>
+<h2 id="源文件">源文件</h2>
+<pre><code>170220003CD|200.0000|2617349500 2617349502~2617349507|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+</code></pre>
+<h2 id="目标结果">目标结果</h2>
+<pre><code>170220003CD|200.0000|2617349500|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+170220003CD|200.0000|2617349502|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+170220003CD|200.0000|2617349503|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+170220003CD|200.0000|2617349504|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+170220003CD|200.0000|2617349505|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+170220003CD|200.0000|2617349506|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+170220003CD|200.0000|2617349507|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
 </code></pre>
 
-<h3 id="人生四句话">人生四句话</h3>
+<h3 id="spark-代码为">spark 代码为</h3>
+<pre><code>val file = sc.textFile("/tmp/demo2.txt")
+file.map { line =&gt;
+val array = line.split("\\|")
+val tels = array(2)
+val telss=tels.split(" ")
+println("hello -------------------------------------")
+val content = line.replace(tels, "dianhuahaoma")
+for (j &lt;- telss) yield {
+if (j.contains("~")) {
+val start = BigInt(j.split("~")(0))
+val end = BigInt(j.split("~")(1))
+for (k &lt;- start to end) yield {
+(k, content)
+}
+} else {
+Vector((telss(0), content))
+}
+}
+}.flatMap(s=&gt;s).flatMap(s=&gt;s).map(s=&gt;s._2.replace("dianhuahaoma",""+s._1).replace("|","\t")).saveAsTextFile("/tmp/abc28")
+</code></pre>
 
-<p>把自己当成别人（痛苦），<br />
-把别人当成自己（同情），<br />
-把别人当成别人（尊重），<br />
-把自己当成自己（走自己的路）。</p>
-
-	<p><h3><a href="/posts/which-more-important.html">阅读全文 &raquo;</a></h3></p>
+	<p><h3><a href="/posts/spark-analysis-text-to-hive.html">阅读全文 &raquo;</a></h3></p>
 <hr>
 
 
@@ -229,8 +238,8 @@
                 <ul class="list-unstyled">
 				
                   <li>
-                    <a href="/posts/which-more-important.html">
-                      人生什么更重要？[测试]
+                    <a href="/posts/spark-analysis-text-to-hive.html">
+                      spark-analysis-text-to-hive
                     </a>
                   </li>
 				  
@@ -239,42 +248,128 @@
 			</div>
           </div>		  
 		  <!-- Blog Links Well -->
-          <div class="well">
+          <div class="well" id="funny">
             <h4>
-              友情链接
+              一起来玩
             </h4>
-                        <ul class="list-unstyled">
-              <li>
-                <a href="https://github.com">
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <a href="http://www.panxw.com">
-                  潘学文博客
-                </a>
-              </li>
-              <li>
-                <a href="http://www.manongjc.com" target="_blank">
-                  码农教程
-                </a>
-              </li>	
-              <li>
-                <a href="http://www.ruanyifeng.com/blog/" target="_blank">
-                  阮一峰的博客
-                </a>
-              </li>	
-              <li>
-                <a href="http://www.youth168.com" target="_blank">
-                  青年励志网
-                </a>
-              </li>
-              <li>
-                <a href="/links.html">
-                  交换友情链接
-                </a>
-              </li>				  
-            </ul>
+                            <script src="js/d3.v4.js" charset="utf-8"></script>
+                <script>
+                    var width = 350;
+                    var height = 350;
+
+                    var svg = d3.select("#funny").append("svg")
+                            .attr("width", width)
+                            .attr("height", height);
+
+                    var center_x = (width / 2);
+                    var center_y = (height / 2);
+
+                    // Calculate position of the circles, given a d=position and angle=current angle.
+                    var xpos_gen = function(d, angle) {
+                        return center_x + (((center_y - radius) * Math.sin(d)) * Math.sin(angle + d));
+                    };
+                    var ypos_gen = function(d, angle) {
+                        return center_y + (((center_y - radius) * Math.cos(d)) * Math.sin(angle + d));
+                    };
+
+                    // Defaults.
+                    var circle_count = 4;
+                    var radius = 20;
+
+                    // For short.
+                    var pi = Math.PI;
+
+                    // Calculate line start and end coordinates.
+                    var line_x1 = function(d) {
+                        return center_x - Math.sin(d) * (width / 2);
+                    };
+                    var line_x2 = function(d) {
+                        return center_x + Math.sin(d) * (width / 2);
+                    };
+                    var line_y1 = function(d) {
+                        return center_y - Math.cos(d) * (height / 2);
+                    };
+                    var line_y2 = function(d) {
+                        return center_y + Math.cos(d) * (height / 2);
+                    };
+
+                    // The data sets the initial position of the circles as well as their
+                    // relative positions to each other.
+                    var data = [];
+
+                    // Update the drawing with new parameters.
+                    var generate = function(circle_count) {
+                        // Refill the data.
+                        data = [];
+                        for (i = 0; i < circle_count; i++) {
+                            data.push((pi / circle_count) * i);
+                        }
+
+                        // Draw the lines
+                        var lines = svg.selectAll('line').data(data);
+                        var line_draw = function(l) {
+                            l.attr('x1', line_x1)
+                                    .attr('y1', line_y1)
+                                    .attr('x2', line_x2)
+                                    .attr('y2', line_y2);
+                        };
+
+                        lines.enter()
+                                .append('line')
+                                .call(line_draw);
+
+                        lines.call(line_draw);
+
+                        lines.exit().remove();
+                    };
+
+                    generate(3);
+
+                    var update = function(angle) {
+                        // Generate new position functions in each call that depend on the current angle.
+                        var xpos = function(d) {
+                            return xpos_gen(d, angle);
+                        };
+
+                        var ypos = function(d) {
+                            return ypos_gen(d, angle);
+                        };
+
+                        var circles = svg.selectAll('circle').data(data);
+
+                        var circle_draw = function(circle) {
+                            circle.attr('r', radius).attr('fill','green')
+                                    .attr('cx', xpos)
+                                    .attr('cy', ypos);
+                        };
+
+                        circles.enter()
+                                .append('circle')
+                                .call(circle_draw);
+
+                        circles.call(circle_draw);
+
+                        circles.exit().remove();
+                    };
+
+                    // Base angle to make calculations
+                    // Ee increase this 1 degree each timer call.
+                    var angle = 0;
+
+                    d3.timer(function() {
+                        // Increase base angle.
+                        angle = angle + (Math.PI / 90);
+
+                        // Avoid angle growing too much.
+                        if (angle >= Math.PI * 2) {
+                            angle = 0;
+                        }
+
+                        // Update visuals.
+                        update(angle);
+                    });
+
+                </script>
  
           </div>
         </div>
@@ -291,7 +386,7 @@
                         <div style="text-align:center;margin-top:15px;">
 				Copyright &copy; www.panxw.com, generated by Jekyll, designed by <a href="https://www.panxw.com">panxw</a>. <a href="https://github.com/panxw/panxw.github.com">[source]</a>
 				<br/>
-				请修改_includes/copyright.html添加统计代码。
+				请修改abcdefg _includes/copyright.html添加统计代码。
             </div>
  
           </div>
