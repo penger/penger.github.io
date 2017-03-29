@@ -20,7 +20,7 @@ A集群机器为A上面有源hive表(分区表,非分区表) B集群上为空白
 脚本如下:
 #### A 机器上
 tongbu.sh
-```shell
+```bash
 #!/bin/bash
 ####################################
 #	gongpeng
@@ -99,7 +99,7 @@ log "------------finish-------------- "
 #### B 机器上
 
 create_hive_table.sh
-```shell
+```bash
 #!/bin/bash
 echo "$@" > /home/bl/app/args.log
 sql_file_path=/home/bl/app/tmp
@@ -122,7 +122,7 @@ fi
 ```
 
 check_hive_records.sh
-```shell
+```bash
 #!/bin/bash
 db_name=$1
 table_name=$2
@@ -132,3 +132,8 @@ echo $query_result
 ```
 
 待完善,脚本中的 HDFS 访问地址为写死的,由于hdfs-site.xml 中的foundation 并非 nameservice,为了防止namenode切换,应该另写一段程序获取active状态的namenode
+
+
+```js
+function () { return "This code is highlighted as Javascript!"}
+```
