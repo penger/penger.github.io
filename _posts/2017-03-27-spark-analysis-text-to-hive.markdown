@@ -5,13 +5,13 @@ title:  "spark-analysis-text-to-hive"
 tags: [spark,hive]
 ---
 
-### 需求
-## 分隔文件中的电话号码字段,然后将一行拆为多行的代码实现
-## 源文件
+## 需求
+### 分隔文件中的电话号码字段,然后将一行拆为多行的代码实现
+### 源文件
 ```
 170220003CD|200.0000|2617349500 2617349502~2617349507|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
 ```
-## 目标结果
+### 目标结果
 ```
 170220003CD|200.0000|2617349500|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
 170220003CD|200.0000|2617349502|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
@@ -21,7 +21,6 @@ tags: [spark,hive]
 170220003CD|200.0000|2617349506|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
 170220003CD|200.0000|2617349507|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
 ```
-
 ### spark 代码为
 ```
 val file = sc.textFile("/tmp/demo2.txt")
@@ -32,15 +31,14 @@ val telss=tels.split(" ")
 println("hello -------------------------------------")
 val content = line.replace(tels, "dianhuahaoma")
 for (j <- telss) yield {
-if (j.contains("~")) {
-val start = BigInt(j.split("~")(0))
-val end = BigInt(j.split("~")(1))
-for (k <- start to end) yield {
-(k, content)
-}
-} else {
-Vector((telss(0), content))
-}
-}
+    if (j.contains("~")) {
+        val start = BigInt(j.split("~")(0))
+        val end = BigInt(j.split("~")(1))
+        for (k <- start to end) yield {
+            (k, content)
+        }} else {
+            Vector((telss(0), content))
+        }
+    }
 }.flatMap(s=>s).flatMap(s=>s).map(s=>s._2.replace("dianhuahaoma",""+s._1).replace("|","\t")).saveAsTextFile("/tmp/abc28")
 ```
