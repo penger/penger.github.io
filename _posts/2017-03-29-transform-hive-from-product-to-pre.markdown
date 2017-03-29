@@ -1,7 +1,7 @@
 ---
 layout: post
 category: "read"
-title:  "transform hive from product to pre"
+title:  "生产hive数据导入到测试hive中"
 tags: [shell,hive]
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: post
 category: "read"
-title:  "spark analysis text to hive"
+title:  "spark一行拆多行然后插入到hive中"
 tags: [spark,hive]
 ---
 

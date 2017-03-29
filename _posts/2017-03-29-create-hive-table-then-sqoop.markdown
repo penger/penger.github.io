@@ -1,7 +1,7 @@
 ---
 layout: post
 category: "read"
-title:  "create hive table from oracle then sqoop"
+title:  "通过jdbc得到hive表结构通过sqoop导入到hive中"
 tags: [oracle,hive,sqoop]
 ---
 
