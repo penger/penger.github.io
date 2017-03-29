@@ -1,7 +1,7 @@
 ---
 layout: post
 category: "read"
-title:  "spark-analysis-text-to-hive"
+title:  "spark analysis text to hive"
 tags: [spark,hive]
 ---
 

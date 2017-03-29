@@ -1,7 +1,7 @@
 ---
 layout: post
 category: "read"
-title:  "create-hive-table-from-oracle-then-sqoop"
+title:  "create hive table from oracle then sqoop"
 tags: [spark,hive]
 ---
 
