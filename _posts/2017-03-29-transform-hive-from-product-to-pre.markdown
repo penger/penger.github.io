@@ -9,10 +9,10 @@ tags: [shell,hive]
 生产集群和测试集群 数据传输
 A集群机器为A上面有源hive表(分区表,非分区表) B集群上为空白集群
 思路:
->根据提供的库名,表名得到时候在A集群存在hdfs文件
->生成hive表的建表语句保存为文件,SCP到B集群中的机器
->执行B机器的建表语句,如果含有分区信息创建分区表
->通过SCP命令将HDFS文件远程拷贝到B集群中
+1. 根据提供的库名,表名得到时候在A集群存在hdfs文件
+2. 生成hive表的建表语句保存为文件,SCP到B集群中的机器
+3. 执行B机器的建表语句,如果含有分区信息创建分区表
+4. 通过SCP命令将HDFS文件远程拷贝到B集群中
 
 前提:A集群提前创建一个sudo用户,此用户可以免密码登录到B集群中的机器
      程序运行的临时文件存放于 /tmp 目录下并且提供日志记录
@@ -133,7 +133,3 @@ echo $query_result
 
 待完善,脚本中的 HDFS 访问地址为写死的,由于hdfs-site.xml 中的foundation 并非 nameservice,为了防止namenode切换,应该另写一段程序获取active状态的namenode
 
-
-```js
-function () { return "This code is highlighted as Javascript!"}
-```
