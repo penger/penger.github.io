@@ -10,12 +10,7 @@ name: "博客"
 url: http://penger.github.io
 domain: penger.github.io
 all_categories: [
-["android", "Android开发","/posts/android.html"], 
-["program", "软件编程","/posts/program.html"],
-["web", "Web建站","/posts/web.html"], 
-["linux", "Linux相关","/posts/linux.html"],
-["read", "读书笔记","/posts/read.html"], 
-["other", "杂记","/posts/other.html"],
+["archives", "归档","/posts/archives.html"],
 ["about", "关于","/about.html"]
 ]
 
