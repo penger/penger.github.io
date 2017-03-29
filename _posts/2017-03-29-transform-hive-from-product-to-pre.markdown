@@ -20,7 +20,7 @@ A集群机器为A上面有源hive表(分区表,非分区表) B集群上为空白
 脚本如下:
 #### A 机器上
 tongbu.sh
-```
+```shell
 #!/bin/bash
 ####################################
 #	gongpeng
@@ -99,7 +99,7 @@ log "------------finish-------------- "
 #### B 机器上
 
 create_hive_table.sh
-```
+```shell
 #!/bin/bash
 echo "$@" > /home/bl/app/args.log
 sql_file_path=/home/bl/app/tmp
@@ -122,7 +122,7 @@ fi
 ```
 
 check_hive_records.sh
-```
+```shell
 #!/bin/bash
 db_name=$1
 table_name=$2
