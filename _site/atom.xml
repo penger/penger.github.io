@@ -4,7 +4,7 @@
  <title></title>
  <link href="http://www.panxw.com/atom.xml" rel="self"/>
  <link href="http://www.panxw.com"/>
- <updated>2017-03-16T05:40:39-07:00</updated>
+ <updated>2017-03-27T03:16:35-07:00</updated>
  <author>
    <name>潘学文</name>
    <email>winfirm#163.com</email>
@@ -12,37 +12,46 @@
 
  
  <entry>
-   <title>人生什么更重要？[测试]</title>
-   <link href="http://www.panxw.com/posts/which-more-important.html"/>
-   <updated>2010-01-01T00:00:00-08:00</updated>
-   <id>/posts/which-more-important</id>
-   <content type="html">&lt;h3 id=&quot;哪个更重要&quot;&gt;哪个更重要？&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;方向比努力重要，&lt;br /&gt;
-身体比金钱重要，&lt;br /&gt;
-生活比文凭重要，&lt;br /&gt;
-情商比智商重要，&lt;br /&gt;
-能力比知识重要，&lt;br /&gt;
-行动比（愿望）空想重要。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;一生最重要的7项资产&quot;&gt;一生最重要的7项资产&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;1，健康：人类的第一资产，  
-2，财富：资产的最重要诠释，  
-3，智慧：改变命运的资本，  
-4，婚姻与家庭：身心的避风港，  
-5，心灵：深查世界的棱镜，  
-6，友谊：一生快乐源泉，  
-7，人生的意义：成长的源动力。  
+   <title>spark-analysis-text-to-hive</title>
+   <link href="http://www.panxw.com/posts/spark-analysis-text-to-hive.html"/>
+   <updated>2017-03-27T00:00:00-07:00</updated>
+   <id>/posts/spark-analysis-text-to-hive</id>
+   <content type="html">&lt;h3 id=&quot;需求&quot;&gt;需求&lt;/h3&gt;
+&lt;h2 id=&quot;分隔文件中的电话号码字段然后将一行拆为多行的代码实现&quot;&gt;分隔文件中的电话号码字段,然后将一行拆为多行的代码实现&lt;/h2&gt;
+&lt;h2 id=&quot;源文件&quot;&gt;源文件&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;170220003CD|200.0000|2617349500 2617349502~2617349507|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;目标结果&quot;&gt;目标结果&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;170220003CD|200.0000|2617349500|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+170220003CD|200.0000|2617349502|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+170220003CD|200.0000|2617349503|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+170220003CD|200.0000|2617349504|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+170220003CD|200.0000|2617349505|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+170220003CD|200.0000|2617349506|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
+170220003CD|200.0000|2617349507|2017/02/28 18:55:02|100.0000|80119|百联商业经营公司(百联内部使用－发卡主体)|商品|0023769|全渠道线上销售
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&quot;人生四句话&quot;&gt;人生四句话&lt;/h3&gt;
-
-&lt;p&gt;把自己当成别人（痛苦），&lt;br /&gt;
-把别人当成自己（同情），&lt;br /&gt;
-把别人当成别人（尊重），&lt;br /&gt;
-把自己当成自己（走自己的路）。&lt;/p&gt;
+&lt;h3 id=&quot;spark-代码为&quot;&gt;spark 代码为&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;val file = sc.textFile(&quot;/tmp/demo2.txt&quot;)
+file.map { line =&amp;gt;
+val array = line.split(&quot;\\|&quot;)
+val tels = array(2)
+val telss=tels.split(&quot; &quot;)
+println(&quot;hello -------------------------------------&quot;)
+val content = line.replace(tels, &quot;dianhuahaoma&quot;)
+for (j &amp;lt;- telss) yield {
+if (j.contains(&quot;~&quot;)) {
+val start = BigInt(j.split(&quot;~&quot;)(0))
+val end = BigInt(j.split(&quot;~&quot;)(1))
+for (k &amp;lt;- start to end) yield {
+(k, content)
+}
+} else {
+Vector((telss(0), content))
+}
+}
+}.flatMap(s=&amp;gt;s).flatMap(s=&amp;gt;s).map(s=&amp;gt;s._2.replace(&quot;dianhuahaoma&quot;,&quot;&quot;+s._1).replace(&quot;|&quot;,&quot;\t&quot;)).saveAsTextFile(&quot;/tmp/abc28&quot;)
+&lt;/code&gt;&lt;/pre&gt;
 </content>
  </entry>
  

@@ -84,7 +84,7 @@
                         var circles = svg.selectAll('circle').data(data);
 
                         var circle_draw = function(circle) {
-                            circle.attr('r', radius)
+                            circle.attr('r', radius).attr('fill','green')
                                     .attr('cx', xpos)
                                     .attr('cy', ypos);
                         };
