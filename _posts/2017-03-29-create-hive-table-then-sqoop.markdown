@@ -2,7 +2,7 @@
 layout: post
 category: "read"
 title:  "create hive table from oracle then sqoop"
-tags: [spark,hive]
+tags: [oracle,hive,sqoop]
 ---
 
 ## 需求
