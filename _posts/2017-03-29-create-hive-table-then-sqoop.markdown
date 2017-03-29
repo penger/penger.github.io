@@ -6,9 +6,9 @@ tags: [spark,hive]
 ---
 
 ## 需求
-### 通过jdbc的getmetadata方法得到表结构建立相应的表,之前
-### 两个文件 CreateHiveTableSQL.java  create_hive_table.sh
-#### CreateHiveTableSQL.java
+通过jdbc的getmetadata方法得到表结构建立相应的表,之前
+两个文件 CreateHiveTableSQL.java  create_hive_table.sh
+CreateHiveTableSQL.java
 ```
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,10 +25,10 @@ public class CreateHiveTableSQL {
 
     private static Connection connection=null;
 
-    private static final String url_18="jdbc:oracle:thin:@10.201.48.18:1521:report";
-    private static final String username_18="idmdata";
-    private static final String password_18="bigdata915";
-    private static final String schema_18="idmdata";
+    private static final String url_18="jdbc:oracle:thin:@10.111.111.11:1521:report";
+    private static final String username_18="username";
+    private static final String password_18="password";
+    private static final String schema_18="schema";
 
 
 
@@ -187,7 +187,7 @@ public class CreateHiveTableSQL {
 }
 
 ```
-#### create_hive_table.sh
+create_hive_table.sh
 ```
 #!/bin/bash
 #echo "jdbc:oracle:thin:@10.201.1.1:1521:promodg querydata bigdata MEMBER UMBRELLA_STORE_STOCK"
