@@ -7,13 +7,13 @@ tags: [cdh]
 
 ## 需求
 CDH 集群安装步骤
+```
+310.201.481.1 
+310.201.481.2 
 
-310.201.481.1 xG4(__H8
-310.201.481.2 bJ8&%NH8
-
-310.201.481.46 rootroot
-310.201.481.47 rootroot
-310.201.481.48 rootroot
+310.201.481.46 
+310.201.481.47 
+310.201.481.48 
 
 
 vi /etc/sysctl.conf
@@ -106,13 +106,14 @@ iptables        0:off   1:off   2:off   3:off   4:off   5:off   6:off
 
 9.修改48.1 和48.2的密码为原密码
 
+```
 
-
-注意:出现hive无法建立candy测试的情况,需要将mysql驱动放到 /usr/share/java/ 下
-    :需要保证节点能够访问公司网络的yum源
-    :安装cm管理节点的时候要将server节点纳入cm管理
-    :需要提前搭建 本地的yum源并启动httpd服务
-    :需要设置 mysqld 开机启动
+### 注意   
+	1.出现hive无法建立candy测试的情况,需要将mysql驱动放到 /usr/share/java/ 下
+    2.需要保证节点能够访问公司网络的yum源
+    3.安装cm管理节点的时候要将server节点纳入cm管理
+    4.需要提前搭建 本地的yum源并启动httpd服务
+    5.需要设置 mysqld 开机启动
 
 
 
