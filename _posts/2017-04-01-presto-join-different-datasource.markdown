@@ -8,6 +8,7 @@ tags: [python]
 ## 场景
 使用presto客户端连接oracle和mysql并进行join
 ### 一些步骤 
+```
 安装目录为 /opt/presto168
 启动脚本为 bin/launcher start  //run 为可以看到日志,如果 start看不到日志
 停止脚本为 bin/launcher stop
@@ -20,7 +21,7 @@ oracle 遇到的坑
 3.最后引入idea编译
 
 ./presto --schema oracle --catalog testoracle
-
+```
 ## 图片
 
 ![install steps ](../img/presto_install/1.png)
