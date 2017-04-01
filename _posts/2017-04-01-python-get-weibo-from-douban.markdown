@@ -34,8 +34,8 @@ loginurl = 'https://www.douban.com/accounts/login'
 cookie = cookielib.CookieJar()
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie))
 params = {
-    "form_email": "gongpengllpp@sina.com",
-    "form_password": "lipp125?",
+    "form_email": "username@sina.com",
+    "form_password": "password",
     "source": "index_nav" # 没有的话登录不成功
 }
 # 从首页提交登录
