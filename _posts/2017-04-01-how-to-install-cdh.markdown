@@ -137,3 +137,14 @@ create database hue DEFAULT CHARACTER SET utf8;
 grant all on hue.* TO 'hue'@'%' IDENTIFIED BY 'hue';
 
 
+![install steps ](img/cdh_install/1.png)
+![install steps ](img/cdh_install/2.png)
+![install steps ](img/cdh_install/3.png)
+![install steps ](img/cdh_install/4.png)
+![install steps ](img/cdh_install/5.png)
+![install steps ](img/cdh_install/6.png)
+![install steps ](img/cdh_install/7.png)
+![install steps ](img/cdh_install/8.png)
+![install steps ](img/cdh_install/9.png)
+![install steps ](img/cdh_install/finish.png)
+
