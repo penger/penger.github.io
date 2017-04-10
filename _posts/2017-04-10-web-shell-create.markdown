@@ -19,7 +19,6 @@ tags: [linux,shell,hive,sqoop]
 ########################################################################################################
 #
 #	2016-7-5 15:52:55
-#	gongpeng
 #       update: 2016-7-27 16:32:26
 #	通过提供参数,获取常规的etl脚本
 #	有四个参数: 表名 oracle是否是增量 hive导入的时候时候是分区   oracle的删除字段(如果oracle是增量)
@@ -164,9 +163,9 @@ check_if_not_zero_exit  hive -hivevar SDATE=${task_date} -hivevar TX_DATE=${x_da
 
 
 #删除oracle中的数据 增量删除 inc_*   
-oper_oracle_replacement check_if_not_zero_exit  ssh oracle@10.201.0.155 "/home/oracle/bin/delete_content "
+oper_oracle_replacement check_if_not_zero_exit  ssh oracle@10.201.000.111 "/home/oracle/bin/delete_content "
 #数据从hive导入到oracle
-oper_oracle_replacement check_if_not_zero_exit  sqoop export --connect jdbc:oracle:thin:@10.201.0.155:1521/hdporcl --username idmdata --password bigdata915 --table IDMDATA.REPLACEABLE_TABLE  --export-dir /user/hive/warehouse/idmdata.db/replaceable_table/partition_content  --fields-terminated-by '\001' --input-null-string '\\N' --input-null-non-string '\\N' --m 1
+oper_oracle_replacement check_if_not_zero_exit  sqoop export --connect jdbc:oracle:thin:@10.201.000.111:1521/dbservice --username un --password pw --table IDMDATA.REPLACEABLE_TABLE  --export-dir /user/hive/warehouse/idmdata.db/replaceable_table/partition_content  --fields-terminated-by '\001' --input-null-string '\\N' --input-null-non-string '\\N' --m 1
 ```
 ### customize_clearoracletb.sh
 ```
