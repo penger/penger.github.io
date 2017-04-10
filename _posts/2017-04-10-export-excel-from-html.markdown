@@ -14,8 +14,7 @@ tags: [python]
 3.设置全局的 x,y 初始值为 0,0
 4.如果根据读取的 col ,row 来累加 x,y 并以此作为下一个单元格的初始值
 5.为 数字,表头 等设置单独的样式
-##
-示例
+## 示例
 ![install steps ](../img/export_excel/excel.png)
 ###  
 ```
