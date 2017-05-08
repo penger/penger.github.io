@@ -4,6 +4,8 @@ category: "read"
 title:  "zeppline的使用"
 tags: [zeppline]
 ## 配置方法:
+---
+
 ```
 1.下载zepplin包
 2.放到 hive 用户下(如果用其他启动会在执行spark类型的任务时候无法访问hdfs文件)
