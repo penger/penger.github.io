@@ -5,24 +5,19 @@ title: "关于：About"
 Welcome to visit my blog!
 
 #### 1.Personal Info
-Name: Xuewen Pan(潘学文)  
+Name: PPPPPPenger(潘学文)
 Gender: Male  
-City: Wuhan, China  
-Career: Software developer(Android&Linux&Web)  
+City: ChengDu, China
+Career: Software developer(BigData&Linux&Web)
 
 #### 2.My Links
-Blog: <http://www.panxw.com>  
-GitHub: <https://github.com/panxw>  
-LinkedIn: <http://www.linkedin.com/in/panxw>  
+Blog:
+GitHub: <https://github.com/penger>
+
 
 
 #### 3.Contract
-Email: winfirm#163.com  
-QQ: 85902258  
+Email: esc_penger#163.com
+QQ: 361641238
 
-### 4.Domain For Sale
-danbaili.com  
-fangxinyu.com  
-maicaiwa.com  
-babytoycar.com  
-youth168.com  
+
