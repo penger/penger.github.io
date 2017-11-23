@@ -1,8 +1,8 @@
 ---
 layout: post
 category: "read"
-title:  "zeppline的使用"
-tags: [zeppline]
+title:  "linux指标采集及含义"
+tags: [linux]
 ## 配置方法:
 ---
 
