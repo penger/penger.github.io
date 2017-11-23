@@ -5,7 +5,7 @@ title: "关于：About"
 Welcome to visit my blog!
 
 #### 1.Personal Info
-Name: PPPPPPenger(潘学文)
+Name: PPPPPPenger
 Gender: Male  
 City: ChengDu, China
 Career: Software developer(BigData&Linux&Web)
