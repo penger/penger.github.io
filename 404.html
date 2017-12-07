@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "页面不存在：Page Not Found"
+title: "房贷计算器"
 ---
 
 
@@ -8,9 +8,12 @@ title: "页面不存在：Page Not Found"
 <head>
     <meta charset="utf-8">
     <title>ECharts</title>
-    <!-- 引入 echarts.js -->
+    <!-- 引入 echarts.js
     <script src="../js/echarts.js"></script>
     <script src="../js/jquery-1.11.0.js"></script>
+    -->
+    <script src="http://echarts.baidu.com/dist/echarts.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
 </head>
 <body>
 
@@ -50,6 +53,14 @@ title: "页面不存在：Page Not Found"
         <td>选择年数</td>
         <td><input type="text" id="nian" value="30"></td>
     </tr>
+    <tr>
+        <td>按年计算</td>
+        <td>
+                <label><input name="annian" type="radio" value=true />年 </label>
+                <label><input name="annian" type="radio" value=fasle />月 </label>
+
+        </td>
+    </tr>
 </table>
 <button onclick="refresh()">点击重新生成图表</button>
 
@@ -68,6 +79,7 @@ title: "页面不存在：Page Not Found"
     var nian=$("#nian").val()
     var mainid="main"
     var me="message"
+    var annian=false;
 
 
     function refresh() {
@@ -75,7 +87,7 @@ title: "页面不存在：Page Not Found"
         jzll=$("#jzll").val()
         fd=$("#fd").val()
         nian=$("#nian").val()
-
+        annian=$("input[name='annian']:checked").val()
         appendRandomDiv()
 
         console.log("mainid = "+mainid)
@@ -92,7 +104,7 @@ title: "页面不存在：Page Not Found"
         var info = "贷款总额："+dkze+" 基准利率："+jzll+" 浮动："+fd+" 年数："+nian
         console.log("in function:"+info)
         var myChart=null
-        var annian=false
+//        var annian=false
         var lxlist=new Array()
         var yflist=new Array()
         var yelist=new Array()
