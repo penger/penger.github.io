@@ -8,12 +8,12 @@ title: "房贷计算器"
 <head>
     <meta charset="utf-8">
     <title>ECharts</title>
-    <script src="../js/echarts.js"></script>
-    <script src="../js/jquery-1.11.0.js"></script>
+    <!--<script src="../js/echarts.js"></script>-->
+    <!--<script src="../js/jquery-1.11.0.js"></script>-->
     <!-- 引入 echarts.js
+    -->
     <script src="http://echarts.baidu.com/dist/echarts.js"></script>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
-    -->
 </head>
 <body>
 
@@ -56,8 +56,8 @@ title: "房贷计算器"
     <tr>
         <td>按年计算</td>
         <td>
-                <label><input name="annian" type="radio" value=true />年 </label>
-                <label><input name="annian" type="radio" value=fasle />月 </label>
+                <label><input name="annian" type="radio" value="true" />年 </label>
+                <label><input name="annian" type="radio" value="fasle" />月 </label>
 
         </td>
     </tr>
@@ -79,7 +79,7 @@ title: "房贷计算器"
     var nian=$("#nian").val()
     var mainid="main"
     var me="message"
-    var annian=false;
+    var annian="false";
 
 
     function refresh() {
@@ -88,6 +88,8 @@ title: "房贷计算器"
         fd=$("#fd").val()
         nian=$("#nian").val()
         annian=$("input[name='annian']:checked").val()
+//        alert(annian)
+//        a()
         appendRandomDiv()
 
         console.log("mainid = "+mainid)
@@ -97,6 +99,13 @@ title: "房贷计算器"
 
     }
 
+    function a() {
+        if(annian){
+            console.log("yes")
+        }else{
+            console.log("false")
+        }
+    }
 
     function calcLoans(){
 
@@ -138,7 +147,7 @@ title: "房贷计算器"
             sy=sy-(yhk-lx)
             l=l+lx;s=s+sy;b=b+bj;
             //数据整合为数组
-            if(annian){
+            if(annian=="true"){
                 if(i%12==0){
                     lxlist.push(parseInt(l))
                     yelist.push(parseInt(sy))
