@@ -2,7 +2,7 @@
 layout: page
 title: "关于：About"
 ---
-Welcome to visit my blog!
+# keep it simple and stpid
 
 #### 1.Personal Info
 Name: PPPPPPenger

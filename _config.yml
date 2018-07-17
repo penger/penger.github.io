@@ -4,13 +4,13 @@ permalink: /posts/:title.html
 excerpt_separator: "<!-- more -->"
 
 github: penger 
-author: "happy day"
+author: "be happy"
 email: esc_penger#163.com
 name: "博客"
 url: http://penger.github.io
 domain: penger.github.io
 all_categories: [
-["archives", "归档","/posts/archives.html"],
+["tags", "归档","/posts/tags.html"],
 ["about", "关于","/about.html"]
 ]
 
