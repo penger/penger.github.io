@@ -11,9 +11,9 @@ title: "房贷计算器"
     <script src="../js/echarts.js"></script>
     <script src="../js/jquery-1.11.0.js"></script>
     <!-- 引入 echarts.js
+    <script src="http://echarts.baidu.com/dist/echarts.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
     -->
-    <!--<script src="http://echarts.baidu.com/dist/echarts.js"></script>-->
-    <!--<script src="http://code.jquery.com/jquery-latest.js"></script>-->
 </head>
 <body>
 
@@ -66,7 +66,7 @@ title: "房贷计算器"
 
 <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
 <div id="a" style="float: left;width: 800px;">
-    <div id="main" style="width: 800px;height:200px;float: left"></div>
+    <div id="main" style="width: 800px;height:400px;float: left"></div>
 </div>
 <div id= "b" style="float: right;width: 300px">
     <div id="message" style="color: red ;float:right;height: 200px"></div>
@@ -107,11 +107,22 @@ title: "房贷计算器"
         }
     }
 
+
+    function calcMonth(){
+        var start = new Date(2018,0,1)
+        var end = new Date()
+        var length = end.getFullYear()*12+end.getMonth() -(start.getFullYear()*12+start.getMonth())
+        return length
+    }
+
+
     function calcLoans(){
+        //next month is
+        var next = calcMonth()+1;
 
 
         var info = "贷款总额："+dkze+" 基准利率："+jzll+" 浮动："+fd+" 年数："+nian
-        console.log("in function:"+info)
+        console.log("in function:"+info);
         var myChart=null
 //        var annian=false
         var lxlist=new Array()
@@ -156,8 +167,16 @@ title: "房贷计算器"
                     l=0;			s=0;			b=0;
                 }
             }else{
+                if(next == i){
+                    var s = new Object()
+                    s.value=parseInt(sy)
+                    s.symol='droplet'
+                    s.symbolSize = 20
+                    yelist.push(s)
+                }else{
+                    yelist.push(parseInt(sy))
+                }
                 lxlist.push(parseInt(lx))
-                yelist.push(parseInt(sy))
                 bjlist.push(parseInt(bj))
                 yflist.push(""+(i)+"月")
             }
@@ -165,10 +184,11 @@ title: "房贷计算器"
         //debugger
         info+="<br/>月还款："+parseInt(yhk)
         info+="<br/>总还款："+parseInt(hkze)
+        info+="<br/>已还款："+calcMonth()+"期"
 //        console.log("利息总额 上浮10%:"+hkze)
 
         // 基于准备好的dom，初始化echarts实例
-        debugger
+//        debugger
         myChart = echarts.init(document.getElementById(mainid));
 
         // 指定图表的配置项和数据
@@ -189,15 +209,15 @@ title: "房贷计算器"
             yAxis: {},
             series: [{
                 name: '余额',
-                type: 'bar',
+                type: 'line',
                 data: yelist
             },{
                 name: '利息',
-                type: 'bar',
+                type: 'line',
                 data: lxlist
             },{
                 name: '本金',
-                type: 'bar',
+                type: 'line',
                 data: bjlist
             }]
         };
@@ -209,13 +229,14 @@ title: "房贷计算器"
         $("#"+me).append(info+"<br/>")
 
     }
+    //为自定义的图标生成一个随机的div
     function appendRandomDiv() {
         var x=100000;
         var y=1;
         var rand=parseInt(Math.random()*(x-y+1)+y)
         rand="main"+rand
         me="message"+rand
-        $("#a").append("<div id='"+rand+"' style='width: 800px;height:200px;float: left'>"+rand+"</div>")
+        $("#a").append("<div id='"+rand+"' style='width: 800px;height:400px;float: left'>"+rand+"</div>")
         $("#b").append("<div id='"+me+"' style='color: red ;float:right;height: 200px'></div>")
         mainid = rand
     }
