@@ -10,7 +10,7 @@ name: "博客"
 url: http://penger.github.io
 domain: penger.github.io
 all_categories: [
-["tags", "归档","/tags.html"],
+["tags", "分类","/tags.html"],
 ["about", "关于","/about.html"]
 ]
 
