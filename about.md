@@ -2,7 +2,7 @@
 layout: page
 title: "关于：About"
 ---
-# keep it simple and stpid
+# keep it simple and stupid
 
 #### 1.Personal Info
 Name: PPPPPPenger
