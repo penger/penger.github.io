@@ -1,15 +1,15 @@
 ---
 layout: post
 category: "read"
-title:  "²É¼¯¶à¸ö´óÊı¾İ¼¯ÈºµÄÖ¸±ê£¬²¢×öÀúÊ·ºÍÏÖ×´µÄÕ¹Ê¾"
+title:  "é‡‡é›†å¤šä¸ªå¤§æ•°æ®é›†ç¾¤çš„æŒ‡æ ‡ï¼Œå¹¶åšå†å²å’Œç°çŠ¶çš„å±•ç¤º"
 tags: [elasticsearch,bootstrap,webmagic]
 ---
 
-## ¹¦ÄÜËµÃ÷
+## åŠŸèƒ½è¯´æ˜
 
-Ê¹ÓÃWebMagicÍ¨¹ıHTTPÒ³ÃæºÍJMX²É¼¯¼¯ÈºĞÅÏ¢,¼à¿Ø¶à¸ö¼¯ÈºµÄHbase,HaddopÖ¸±ê¾²Ì¬Ò³ÃæÕ¹Ê¾£¬Í¨¹ıElasticSearchºÍKibinaÊµÏÖÀúÊ·ĞÅÏ¢²éÑ¯
-    1.Í¨¹ıĞŞ¸ÄWebMagicÔ´ÂëÈÏÖ¤Ä£¿é£¬²É¼¯HTMLºÍJMXĞÅÏ¢
-    2.Ìá½»ÇëÇóµ½ElasticSearch 
-    3.kibina²éÑ¯ÀúÊ·ĞÅÏ¢
-    4.Ìá¹©python3ÏÂÃæµÄ python -m http.server 8080 ·şÎñ
+ä½¿ç”¨WebMagicé€šè¿‡HTTPé¡µé¢å’ŒJMXé‡‡é›†é›†ç¾¤ä¿¡æ¯,ç›‘æ§å¤šä¸ªé›†ç¾¤çš„Hbase,HaddopæŒ‡æ ‡é™æ€é¡µé¢å±•ç¤ºï¼Œé€šè¿‡ElasticSearchå’ŒKibinaå®ç°å†å²ä¿¡æ¯æŸ¥è¯¢
+    1.é€šè¿‡ä¿®æ”¹WebMagicæºç è®¤è¯æ¨¡å—ï¼Œé‡‡é›†HTMLå’ŒJMXä¿¡æ¯
+    2.æäº¤è¯·æ±‚åˆ°ElasticSearch 
+    3.kibinaæŸ¥è¯¢å†å²ä¿¡æ¯
+    4.æä¾›python3ä¸‹é¢çš„ python -m http.server 8080 æœåŠ¡
     
