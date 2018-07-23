@@ -15,4 +15,4 @@ tags: [zeppline]
 5.访问spark 需要cp conf/zep*-env.sh 文件添加 spark_home
 ```
 ## 项目截图
-![install steps ](../img/zeppelin/1.png)
+![zeppeling img ](../img/zeppelin/1.png)
