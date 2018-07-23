@@ -1,8 +1,8 @@
 ---
 layout: post
 category: "read"
-title:  "采集多个大数据集群的指标，并做历史和现状的展示"
-tags: [elasticsearch,bootstrap,webmagic]
+title:  "spark一行拆多行然后插入到hive中"
+tags: [spark,hive]
 ---
 
 ## 功能说明
@@ -13,7 +13,7 @@ tags: [elasticsearch,bootstrap,webmagic]
     4.提供python3下面的 python -m http.server 8080 服务
     
 项目流程
-![流程图 ](../img/monitor/flow.png)
+![flows ](../img/monitor/flow.png)
 静态页面一
 ![html1 ](../img/monitor/html1.png)
 静态页面二
