@@ -12,13 +12,3 @@ tags: [elasticsearch,bootstrap,webmagic]
     3.kibina查询历史信息
     4.提供python3下面的 python -m http.server 8080 服务
     
-项目流程
-![flows ](../img/monitor/flow.png)
-静态页面一
-![html1 ](../img/monitor/html1.png)
-静态页面二
-![html2 ](../img/monitor/html2.png)
-kibina页面一
-![kibina1 ](../img/monitor/kibina1.png)
-kibina页面二
-![kibina2 ](../img/monitor/kibina2.png)
