@@ -3,9 +3,9 @@ layout: post
 category: "read"
 title:  "linux指标采集及含义"
 tags: [linux]
-## 配置方法:
 ---
 
+## 配置方法:
 ```
 1. Linux运维基础采集项
 
@@ -186,3 +186,4 @@ ss.timewait
 ss.slabinfo.timewait
 ss.synrecv
 ss.estab
+```
