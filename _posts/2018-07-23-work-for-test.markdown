@@ -1,3 +1,1 @@
 just for test
-
-使用WebMagic通过HTTP页面和JMX采集集群信息,监控多个集群的Hbase,Haddop指标静态页面展示，通过ElasticSearch和Kibina实现历史信息查询
