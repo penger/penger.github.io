@@ -1,9 +1,4 @@
----
-layout: post
-category: "read"
-title:  "采集多个大数据集群的指标，并做历史和现状的展示"
-tags: [elasticsearch,bootstrap,webmagic]
----
+
 
 ## 功能说明
 
