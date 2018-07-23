@@ -3,8 +3,8 @@ layout: post
 category: "read"
 title:  "zeppline的使用"
 tags: [zeppline]
-## 配置方法:
 ---
+## 配置方法:
 
 ```
 1.下载zepplin包
