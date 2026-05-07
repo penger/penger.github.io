@@ -1,262 +1,1703 @@
----
-layout: default
-title: "房贷计算器"
----
-
-
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title>ECharts</title>
-    <script src="../js/echarts.js"></script>
-    <script src="../js/jquery-1.11.0.js"></script>
-    <!-- 引入 echarts.js
-    <script src="http://echarts.baidu.com/dist/echarts.js"></script>
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    -->
-</head>
-<body>
-
-<!--
-<div id="main4" style="width: 1600px;height:300px;"></div>
--->
-
-<!--
-	<button onclick="one()">1</button>
-
-	    //贷款总额
-        var dkze=55*10000
-        //贷款利息
-        var dkll=4.9*(1+0.1)/100
-        //月利率
-        var yll=dkll/12
-        //月份
-        var yf=30*12
-        //剩余未还款
-        var sy=dkze
-        //当月利息
--->
-<table>
-    <tr>
-        <td>贷款总额</td>
-        <td><input type="text" id="dkze" value="550000"></td>
-    </tr>
-    <tr>
-        <td>基准利率</td>
-        <td><input type="text" id="jzll" value="4.9"></td>
-    </tr>
-    <tr>
-        <td>上浮或下调百分比</td>
-        <td><input type="text" id="fd" value="0.1"></td>
-    </tr>
-    <tr>
-        <td>选择年数</td>
-        <td><input type="text" id="nian" value="30"></td>
-    </tr>
-    <tr>
-        <td>按年计算</td>
-        <td>
-                <label><input name="annian" type="radio" value="true" />年 </label>
-                <label><input name="annian" type="radio" value="fasle" />月 </label>
-
-        </td>
-    </tr>
-</table>
-<button onclick="refresh()">点击重新生成图表</button>
-
-<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-<div id="a" style="float: left;width: 800px;">
-    <div id="main" style="width: 800px;height:400px;float: left"></div>
-</div>
-<div id= "b" style="float: right;width: 300px">
-    <div id="message" style="color: red ;float:right;height: 200px"></div>
-</div>
-<script type="text/javascript">
-
-    var dkze=$("#dkze").val()
-    var jzll=$("#jzll").val()
-    var fd=$("#fd").val()
-    var nian=$("#nian").val()
-    var mainid="main"
-    var me="message"
-    var annian="false";
-
-
-    function refresh() {
-        dkze=$("#dkze").val()
-        jzll=$("#jzll").val()
-        fd=$("#fd").val()
-        nian=$("#nian").val()
-        annian=$("input[name='annian']:checked").val()
-//        alert(annian)
-//        a()
-        appendRandomDiv()
-
-        console.log("mainid = "+mainid)
-        console.log("贷款总额："+dkze+" 基准利率："+jzll+" 浮动："+fd+" 年数："+nian)
-
-        calcLoans()
-
-    }
-
-    function a() {
-        if(annian){
-            console.log("yes")
-        }else{
-            console.log("false")
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贷款利率计算器 - 支持提前还款</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-    }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    function calcMonth(){
-        var start = new Date(2018,0,1)
-        var end = new Date()
-        var length = end.getFullYear()*12+end.getMonth() -(start.getFullYear()*12+start.getMonth())
-        return length
-    }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
 
-    function calcLoans(){
-        //next month is
-        var next = calcMonth()+1;
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
 
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
 
-        var info = "贷款总额："+dkze+" 基准利率："+jzll+" 浮动："+fd+" 年数："+nian
-        console.log("in function:"+info);
-        var myChart=null
-//        var annian=false
-        var lxlist=new Array()
-        var yflist=new Array()
-        var yelist=new Array()
-        var bjlist=new Array()
-        var hkze=0
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
 
-        //贷款利息
-        var dkll=jzll*(1+parseFloat(fd))/100
-//        alert(dkll)
-        //月利率
-        var yll=dkll/12
-        //月份
-        var yf=nian*12
-        //剩余未还款
-        var sy=dkze
-        //当月利息
-        var lx=0
-        l=0;			s=0;			b=0;
-        var t=0;
-        for(var i=1;i<=yf;i++){
-            //月还款
-            var yhk=(dkze*yll*((1+yll)**yf))/((1+yll)**yf-1)
+        .row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
 
-            hkze=hkze+yhk
-            //当月还利息
-            lx=sy*yll
-            t=t+lx
-            //当月还本金
-            bj=yhk-lx
-            //剩余未还款
-            sy=sy-(yhk-lx)
-            l=l+lx;s=s+sy;b=b+bj;
-            //数据整合为数组
-            if(annian=="true"){
-                if(i%12==0){
-                    lxlist.push(parseInt(l))
-                    yelist.push(parseInt(sy))
-                    bjlist.push(parseInt(b))
-                    yflist.push(""+(i/12)+"年")
-                    l=0;			s=0;			b=0;
-                }
-            }else{
-                if(next == i){
-                    var s = new Object()
-                    s.value=parseInt(sy)
-                    s.symol='droplet'
-                    s.symbolSize = 20
-                    yelist.push(s)
-                }else{
-                    yelist.push(parseInt(sy))
-                }
-                lxlist.push(parseInt(lx))
-                bjlist.push(parseInt(bj))
-                yflist.push(""+(i)+"月")
+        .col {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+
+        .btn-danger {
+            background: #ff4757;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ff3838;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        .btn-xs {
+            padding: 2px 8px;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-group:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-group input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 12px 16px;
+            font-size: 16px;
+            background: transparent;
+        }
+
+        .input-suffix {
+            padding: 0 12px;
+            color: #666;
+            font-size: 14px;
+            background: #f5f5f5;
+        }
+
+        .date-input {
+            display: flex;
+            align-items: center;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 0 8px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .date-input:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .date-input input {
+            border: none;
+            outline: none;
+            padding: 12px 8px;
+            font-size: 16px;
+            background: transparent;
+            text-align: center;
+        }
+
+        .section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .section-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .badge {
+            padding: 2px 8px;
+            background: #667eea;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 10px;
+        }
+
+        .row.compact {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .row.compact input {
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .row.compact input:focus {
+            border-color: #667eea;
+        }
+
+        .record-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .record-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: #fafafa;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .record-item .amount {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .record-item.rate-item {
+            background: #e3f2fd;
+        }
+
+        .date-picker-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 2px;
+            flex: 1;
+        }
+
+        .date-picker-group input {
+            border: none;
+            outline: none;
+            padding: 8px 6px;
+            font-size: 14px;
+            background: transparent;
+            text-align: center;
+        }
+
+        .date-picker-group input:focus {
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        .period-badge {
+            background: #667eea;
+            color: white;
+            padding: 8px 6px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 4px;
+        }
+
+        .history-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .history-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .history-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-card .card-header .title {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .history-card .card-header .time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .history-card .card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .history-card .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .history-card .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .history-card .info-row .label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .history-card .info-row .value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .history-card .info-row .value.highlight {
+            color: #667eea;
+        }
+
+        .history-card .info-row .value.saved {
+            color: #10b981;
+        }
+
+        .history-card .record-list {
+            margin-top: 5px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .history-card .record-item {
+            font-size: 12px;
+            padding: 4px 0;
+            color: #555;
+        }
+
+        .preset-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .preset-btn {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .preset-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .preset-btn:hover .preset-title,
+        .preset-btn:hover .preset-desc {
+            color: white;
+        }
+
+        .preset-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .preset-desc {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .history-card .card-footer {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: flex-end;
+        }
+
+        .main-btn {
+            margin-top: 24px;
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .chart-wrapper {
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chart-container {
+            overflow: auto;
+            cursor: grab;
+        }
+
+        .chart-container:active {
+            cursor: grabbing;
+        }
+
+        .prepayment-list {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .prepayment-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #fafafa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            gap: 15px;
+        }
+
+        .prepayment-item .info {
+            flex: 1;
+        }
+
+        .prepayment-item .info div {
+            margin-bottom: 5px;
+        }
+
+        .prepayment-item .label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .prepayment-item .value {
+            color: #333;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .summary-card .label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .summary-card .value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #666;
+            font-size: 14px;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .progress-bar .principal {
+            background: linear-gradient(90deg, #10b981, #34d399);
+            height: 100%;
+            float: left;
+        }
+
+        .progress-bar .interest {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            height: 100%;
+            float: left;
+        }
+
+        .highlight {
+            background: #fff3cd !important;
+        }
+
+        .highlight-rate {
+            background: #e3f2fd !important;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .chart-container {
+            height: 400px;
+            position: relative;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            height: 300px;
+            padding: 20px;
+            gap: 2px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, #10b981, #34d399);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-height: 2px;
+        }
+
+        .chart-bar.interest {
+            background: linear-gradient(180deg, #f59e0b, #fbbf24);
+        }
+
+        .chart-bar-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .chart-x-axis {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .row {
+                flex-direction: column;
+            }
+
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .btn {
+                width: 100%;
             }
         }
-        //debugger
-        info+="<br/>月还款："+parseInt(yhk)
-        info+="<br/>总还款："+parseInt(hkze)
-        info+="<br/>已还款："+calcMonth()+"期"
-//        console.log("利息总额 上浮10%:"+hkze)
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>贷款利率计算器</h1>
+            <p>支持提前还款和利率调整 · 自动计算最优还款方案</p>
+        </div>
 
-        // 基于准备好的dom，初始化echarts实例
-//        debugger
-        myChart = echarts.init(document.getElementById(mainid));
+        <div class="card">
+            <div class="section-header" style="margin-bottom: 15px;">
+                <h3>📋 预设还款计划</h3>
+            </div>
+            <div class="preset-plans">
+                <button class="preset-btn" onclick="applyPreset('plan1')">
+                    <div class="preset-title">方案一：50万 · 15年</div>
+                    <div class="preset-desc">利率4.9% · 2次提前还款</div>
+                </button>
+                <button class="preset-btn" onclick="applyPreset('plan2')">
+                    <div class="preset-title">方案二：50万 · 20年</div>
+                    <div class="preset-desc">利率4.9% · 2次提前还款</div>
+                </button>
+                <button class="preset-btn" onclick="applyPreset('plan3')">
+                    <div class="preset-title">方案三：80万 · 15年</div>
+                    <div class="preset-desc">利率4.9% · 3次提前还款</div>
+                </button>
+                <button class="preset-btn" onclick="applyPreset('plan4')">
+                    <div class="preset-title">方案四：80万 · 20年</div>
+                    <div class="preset-desc">利率4.9% · 3次提前还款</div>
+                </button>
+                <button class="preset-btn" onclick="applyPreset('plan5')">
+                    <div class="preset-title">方案五：100万 · 15年</div>
+                    <div class="preset-desc">利率4.9% · 3次提前还款</div>
+                </button>
+                <button class="preset-btn" onclick="applyPreset('plan6')">
+                    <div class="preset-title">方案六：100万 · 20年</div>
+                    <div class="preset-desc">利率4.9% · 3次提前还款</div>
+                </button>
+            </div>
+        </div>
+            <p>支持提前还款计算，展示每期还款详情</p>
+        </div>
 
-        // 指定图表的配置项和数据
-        var option = {
-            title: {
-                text: dkze+" "+jzll+" "+fd+" "+nian
-            },
-            tooltip: {},
-            legend: {
-                data:['余额','利息','本金'],
-                selected:{
-                    '余额':false
+        <div class="card">
+            <div class="row">
+                <div class="col" style="flex: 1.2;">
+                    <div class="form-group">
+                        <label>贷款金额</label>
+                        <div class="input-group">
+                            <input type="number" id="loanAmount" value="55" step="0.1" placeholder="金额">
+                            <span class="input-suffix">万元</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label>年利率</label>
+                        <div class="input-group">
+                            <input type="number" id="annualRate" value="5.341" step="0.001" placeholder="利率">
+                            <span class="input-suffix">%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label>贷款期限</label>
+                        <div class="input-group">
+                            <input type="number" id="loanMonths" value="360" step="1" placeholder="月数">
+                            <span class="input-suffix">个月</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label>开始时间</label>
+                        <div class="date-input">
+                            <input type="number" id="startYear" value="2018" step="1" placeholder="年" style="width: 45%;">
+                            <span style="margin: 0 4px;">/</span>
+                            <input type="number" id="startMonth" value="1" step="1" min="1" max="12" placeholder="月" style="width: 45%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3>提前还款</h3>
+                    <span class="badge" id="prepaymentCount">2条</span>
+                </div>
+                <div class="row compact">
+                    <div class="date-picker-group">
+                        <input type="number" id="prepayYear" value="2023" step="1" placeholder="年" style="width: 35%;">
+                        <input type="number" id="prepayMonth" value="10" step="1" min="1" max="12" placeholder="月" style="width: 35%;">
+                        <span id="prepayPeriod" class="period-badge" style="width: 25%; text-align: center;">第70期</span>
+                    </div>
+                    <input type="number" id="prepayAmount" value="15" step="0.1" placeholder="金额（万元）" style="flex: 0.8;">
+                    <button class="btn btn-primary btn-sm" onclick="addPrepayment()">添加</button>
+                </div>
+                <div class="record-list" id="prepaymentList">
+                    <div class="record-item">
+                        <span>第70期 (2023年10月)</span>
+                        <span class="amount">15.00万元</span>
+                        <button class="btn btn-danger btn-xs" onclick="removePrepayment(this)">×</button>
+                    </div>
+                    <div class="record-item">
+                        <span>第100期 (2026年4月)</span>
+                        <span class="amount">15.00万元</span>
+                        <button class="btn btn-danger btn-xs" onclick="removePrepayment(this)">×</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3>利率调整</h3>
+                    <span class="badge" id="rateChangeCount">1条</span>
+                </div>
+                <div class="row compact">
+                    <div class="date-picker-group">
+                        <input type="number" id="rateYear" value="2023" step="1" placeholder="年" style="width: 35%;">
+                        <input type="number" id="rateMonth" value="10" step="1" min="1" max="12" placeholder="月" style="width: 35%;">
+                        <span id="ratePeriod" class="period-badge" style="width: 25%; text-align: center;">第70期</span>
+                    </div>
+                    <input type="number" id="rateValue" value="3.2" step="0.001" placeholder="新利率（%）" style="flex: 0.8;">
+                    <button class="btn btn-primary btn-sm" onclick="addRateChange()">添加</button>
+                </div>
+                <div class="record-list" id="rateChangeList">
+                    <div class="record-item rate-item">
+                        <span>第70期 (2023年10月)</span>
+                        <span class="amount">3.200%</span>
+                        <button class="btn btn-danger btn-xs" onclick="removeRateChange(this)">×</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary main-btn" onclick="calculate()">计算还款明细</button>
+        </div>
+
+        <div class="card" id="resultCard" style="display: none;">
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="label">原计划总利息</div>
+                    <div class="value" id="originalInterest">-</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">实际总利息</div>
+                    <div class="value" id="actualInterest">-</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">节省利息</div>
+                    <div class="value" id="savedInterest">-</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">实际还款期数</div>
+                    <div class="value" id="actualMonths">-</div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('table')">还款明细表</button>
+                <button class="tab" onclick="showTab('echarts')">图表分析</button>
+                <button class="tab" onclick="showTab('history')">计算历史</button>
+            </div>
+
+            <div id="tableContent">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>期数</th>
+                                <th>还款日期</th>
+                                <th>年利率（%）</th>
+                                <th>月供（元）</th>
+                                <th>本金（元）</th>
+                                <th>利息（元）</th>
+                                <th>剩余本金（元）</th>
+                                <th>本金/利息占比</th>
+                            </tr>
+                        </thead>
+                        <tbody id="repaymentTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="echartsContent" style="display: none;">
+                <div class="chart-wrapper">
+                    <div class="chart-container">
+                        <div id="mainChart" style="width: 100%; height: 400px;"></div>
+                    </div>
+                </div>
+                <div class="chart-wrapper">
+                    <div class="chart-container">
+                        <div id="stackedChart" style="width: 100%; height: 400px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="historyContent" style="display: none;">
+                <div id="historyCards" class="history-cards">
+                </div>
+                <div style="text-align: right; margin-top: 15px;">
+                    <button class="btn btn-danger btn-sm" onclick="clearHistory()">清空历史记录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const prepayments = [
+            { month: 70, amount: 15 },
+            { month: 100, amount: 15 }
+        ];
+
+        const rateChanges = [
+            { month: 70, rate: 3.2 }
+        ];
+
+        function calculatePeriod(year, month) {
+            const startYear = parseInt(document.getElementById('startYear').value) || 2018;
+            const startMonth = parseInt(document.getElementById('startMonth').value) || 1;
+            
+            let years = year - startYear;
+            let months = month - startMonth;
+            
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            return years * 12 + months + 1;
+        }
+
+        function updatePrepayPeriod() {
+            const year = parseInt(document.getElementById('prepayYear').value);
+            const month = parseInt(document.getElementById('prepayMonth').value);
+            
+            if (year && month) {
+                const period = calculatePeriod(year, month);
+                document.getElementById('prepayPeriod').textContent = `第${period}期`;
+            }
+        }
+
+        function updateRatePeriod() {
+            const year = parseInt(document.getElementById('rateYear').value);
+            const month = parseInt(document.getElementById('rateMonth').value);
+            
+            if (year && month) {
+                const period = calculatePeriod(year, month);
+                document.getElementById('ratePeriod').textContent = `第${period}期`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('prepayYear').addEventListener('input', updatePrepayPeriod);
+            document.getElementById('prepayMonth').addEventListener('input', updatePrepayPeriod);
+            document.getElementById('rateYear').addEventListener('input', updateRatePeriod);
+            document.getElementById('rateMonth').addEventListener('input', updateRatePeriod);
+            document.getElementById('startYear').addEventListener('input', function() {
+                updatePrepayPeriod();
+                updateRatePeriod();
+            });
+            document.getElementById('startMonth').addEventListener('input', function() {
+                updatePrepayPeriod();
+                updateRatePeriod();
+            });
+        });
+
+        function addPrepayment() {
+            const year = parseInt(document.getElementById('prepayYear').value);
+            const month = parseInt(document.getElementById('prepayMonth').value);
+            const amount = parseFloat(document.getElementById('prepayAmount').value);
+            
+            if (!year || !month || !amount || month < 1 || month > 12 || amount <= 0) {
+                alert('请输入有效的还款日期和金额');
+                return;
+            }
+
+            const period = calculatePeriod(year, month);
+            prepayments.push({ month: period, amount });
+            prepayments.sort((a, b) => a.month - b.month);
+            renderPrepayments();
+        }
+
+        function removePrepayment(btn) {
+            const item = btn.parentElement;
+            const index = Array.from(item.parentElement.children).indexOf(item);
+            prepayments.splice(index, 1);
+            renderPrepayments();
+        }
+
+        function renderPrepayments() {
+            const startYear = parseInt(document.getElementById('startYear').value) || 2018;
+            const startMonth = parseInt(document.getElementById('startMonth').value) || 1;
+            const list = document.getElementById('prepaymentList');
+            list.innerHTML = prepayments.map((p, i) => {
+                let year = startYear + Math.floor((p.month - 1) / 12);
+                let month = startMonth + (p.month - 1) % 12;
+                if (month > 12) {
+                    year++;
+                    month -= 12;
                 }
-            },
-            xAxis: {
-                data:yflist
-            },
-            yAxis: {},
-            series: [{
-                name: '余额',
-                type: 'line',
-                data: yelist
-            },{
-                name: '利息',
-                type: 'line',
-                data: lxlist
-            },{
-                name: '本金',
-                type: 'line',
-                data: bjlist
-            }]
-        };
+                return `
+                    <div class="record-item">
+                        <span>第${p.month}期 (${year}年${month}月)</span>
+                        <span class="amount">${p.amount.toFixed(2)}万元</span>
+                        <button class="btn btn-danger btn-xs" onclick="removePrepayment(this)">×</button>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('prepaymentCount').textContent = prepayments.length + '条';
+        }
 
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option)
+        function addRateChange() {
+            const year = parseInt(document.getElementById('rateYear').value);
+            const month = parseInt(document.getElementById('rateMonth').value);
+            const rate = parseFloat(document.getElementById('rateValue').value);
+            
+            if (!year || !month || !rate || month < 1 || month > 12 || rate <= 0) {
+                alert('请输入有效的调整日期和利率');
+                return;
+            }
 
-//        alert(info)
-        $("#"+me).append(info+"<br/>")
+            const period = calculatePeriod(year, month);
+            rateChanges.push({ month: period, rate });
+            rateChanges.sort((a, b) => a.month - b.month);
+            renderRateChanges();
+        }
 
-    }
-    //为自定义的图标生成一个随机的div
-    function appendRandomDiv() {
-        var x=100000;
-        var y=1;
-        var rand=parseInt(Math.random()*(x-y+1)+y)
-        rand="main"+rand
-        me="message"+rand
-        $("#a").append("<div id='"+rand+"' style='width: 800px;height:400px;float: left'>"+rand+"</div>")
-        $("#b").append("<div id='"+me+"' style='color: red ;float:right;height: 200px'></div>")
-        mainid = rand
-    }
-    calcLoans();
+        function removeRateChange(btn) {
+            const item = btn.parentElement;
+            const index = Array.from(item.parentElement.children).indexOf(item);
+            rateChanges.splice(index, 1);
+            renderRateChanges();
+        }
 
-</script>
+        function renderRateChanges() {
+            const startYear = parseInt(document.getElementById('startYear').value) || 2018;
+            const startMonth = parseInt(document.getElementById('startMonth').value) || 1;
+            const list = document.getElementById('rateChangeList');
+            list.innerHTML = rateChanges.map((r, i) => {
+                let year = startYear + Math.floor((r.month - 1) / 12);
+                let month = startMonth + (r.month - 1) % 12;
+                if (month > 12) {
+                    year++;
+                    month -= 12;
+                }
+                return `
+                    <div class="record-item rate-item">
+                        <span>第${r.month}期 (${year}年${month}月)</span>
+                        <span class="amount">${r.rate.toFixed(3)}%</span>
+                        <button class="btn btn-danger btn-xs" onclick="removeRateChange(this)">×</button>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('rateChangeCount').textContent = rateChanges.length + '条';
+        }
 
+        function calculate() {
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value) * 10000;
+            const annualRate = parseFloat(document.getElementById('annualRate').value) / 100;
+            const loanMonths = parseInt(document.getElementById('loanMonths').value);
+            const startYear = parseInt(document.getElementById('startYear').value);
+            const startMonth = parseInt(document.getElementById('startMonth').value);
 
+            if (!loanAmount || !annualRate || !loanMonths || loanAmount <= 0 || annualRate <= 0 || loanMonths <= 0) {
+                alert('请输入有效的贷款信息');
+                return;
+            }
+            if (!startYear || !startMonth || startMonth < 1 || startMonth > 12) {
+                alert('请输入有效的贷款开始时间');
+                return;
+            }
 
-<table width="600px" border="2px">
-<tr><td width="10%">1</td> <td width="10%">1.01</td><td width="10%">1.02</td><td width="10%">1.03</td><td width="10%">1.04</td><td width="10%">1.05</td><td width="10%">1.06</td><td width="10%">1.07</td><td width="10%">1.08</td><td width="10%">1.09</td></tr>
-<tr><td>2</td> <td>1.02</td><td>1.04</td><td>1.06</td><td>1.08</td><td>1.1</td><td>1.12</td><td>1.14</td><td>1.17</td><td>1.19</td></tr>
-<tr><td>3</td> <td>1.03</td><td>1.06</td><td>1.09</td><td>1.12</td><td>1.16</td><td>1.19</td><td>1.23</td><td>1.26</td><td>1.3</td></tr>
-<tr><td>4</td> <td>1.04</td><td>1.08</td><td>1.13</td><td>1.17</td><td>1.22</td><td>1.26</td><td>1.31</td><td>1.36</td><td>1.41</td></tr>
-<tr><td>5</td> <td>1.05</td><td>1.1</td><td>1.16</td><td>1.22</td><td>1.28</td><td>1.34</td><td>1.4</td><td>1.47</td><td>1.54</td></tr>
-<tr><td>6</td> <td>1.06</td><td>1.13</td><td>1.19</td><td>1.27</td><td>1.34</td><td>1.42</td><td>1.5</td><td>1.59</td><td>1.68</td></tr>
-<tr><td>7</td> <td>1.07</td><td>1.15</td><td>1.23</td><td>1.32</td><td>1.41</td><td>1.5</td><td>1.61</td><td>1.71</td><td>1.83</td></tr>
-<tr><td>8</td> <td>1.08</td><td>1.17</td><td>1.27</td><td>1.37</td><td>1.48</td><td>1.59</td><td>1.72</td><td>1.85</td><td>1.99</td></tr>
-<tr><td>9</td> <td>1.09</td><td>1.2</td><td>1.3</td><td>1.42</td><td>1.55</td><td>1.69</td><td>1.84</td><td>2</td><td>2.17</td></tr>
-<tr><td>10</td> <td>1.1</td><td>1.22</td><td>1.34</td><td>1.48</td><td>1.63</td><td>1.79</td><td>1.97</td><td>2.16</td><td>2.37</td></tr>
-<tr><td>11</td> <td>1.12</td><td>1.24</td><td>1.38</td><td>1.54</td><td>1.71</td><td>1.9</td><td>2.1</td><td>2.33</td><td>2.58</td></tr>
-<tr><td>12</td> <td>1.13</td><td>1.27</td><td>1.43</td><td>1.6</td><td>1.8</td><td>2.01</td><td>2.25</td><td>2.52</td><td>2.81</td></tr>
-<tr><td>13</td> <td>1.14</td><td>1.29</td><td>1.47</td><td>1.67</td><td>1.89</td><td>2.13</td><td>2.41</td><td>2.72</td><td>3.07</td></tr>
+            const monthlyRate = annualRate / 12;
+            const originalInterest = calculateOriginalInterest(loanAmount, monthlyRate, loanMonths);
+            
+            const schedule = generateRepaymentSchedule(loanAmount, annualRate, loanMonths, prepayments, rateChanges, startYear, startMonth);
+            window.currentSchedule = schedule;
+            
+            const actualInterest = schedule.reduce((sum, item) => sum + item.interest, 0);
+            const savedInterest = originalInterest - actualInterest;
+
+            document.getElementById('originalInterest').textContent = formatMoney(originalInterest);
+            document.getElementById('actualInterest').textContent = formatMoney(actualInterest);
+            document.getElementById('savedInterest').textContent = formatMoney(savedInterest);
+            document.getElementById('actualMonths').textContent = schedule.length + '期';
+
+            renderTable(schedule);
+            
+            addToHistory({
+                loanAmount: loanAmount / 10000,
+                annualRate: annualRate * 100,
+                loanMonths: loanMonths,
+                startYear: startYear,
+                startMonth: startMonth,
+                prepayments: JSON.parse(JSON.stringify(prepayments)),
+                rateChanges: JSON.parse(JSON.stringify(rateChanges)),
+                originalInterest: originalInterest,
+                actualInterest: actualInterest,
+                savedInterest: savedInterest,
+                actualMonths: schedule.length
+            });
+            
+            document.getElementById('resultCard').style.display = 'block';
+            showTab('table');
+        }
+
+        function calculateOriginalInterest(principal, monthlyRate, months) {
+            const monthlyPayment = principal * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1);
+            return monthlyPayment * months - principal;
+        }
+
+        function generateRepaymentSchedule(principal, annualRate, months, prepayments, rateChanges, startYear, startMonth) {
+            const schedule = [];
+            let remainingPrincipal = principal;
+            let currentMonth = 1;
+            let currentMonthlyRate = annualRate / 12;
+            let currentYear = startYear;
+            let currentMonthOfYear = startMonth;
+            
+            const prepaySorted = [...prepayments].sort((a, b) => a.month - b.month);
+            let prepayIndex = 0;
+            
+            const rateSorted = [...rateChanges].sort((a, b) => a.month - b.month);
+            let rateIndex = 0;
+
+            while (remainingPrincipal > 0 && currentMonth <= months) {
+                if (rateIndex < rateSorted.length && currentMonth === rateSorted[rateIndex].month) {
+                    currentMonthlyRate = rateSorted[rateIndex].rate / 100 / 12;
+                    rateIndex++;
+                }
+
+                const remainingMonths = months - currentMonth + 1;
+                const monthlyPayment = remainingPrincipal * currentMonthlyRate * Math.pow(1 + currentMonthlyRate, remainingMonths) / 
+                                      (Math.pow(1 + currentMonthlyRate, remainingMonths) - 1);
+
+                const interest = remainingPrincipal * currentMonthlyRate;
+                const principalPart = monthlyPayment - interest;
+                remainingPrincipal = Math.max(0, remainingPrincipal - principalPart);
+
+                const isPrepayment = prepayIndex < prepaySorted.length && currentMonth === prepaySorted[prepayIndex].month;
+                if (isPrepayment) {
+                    remainingPrincipal -= prepaySorted[prepayIndex].amount * 10000;
+                    prepayIndex++;
+                }
+
+                const isRateChange = rateIndex > 0 && rateSorted[rateIndex - 1] && currentMonth === rateSorted[rateIndex - 1].month;
+
+                const dateStr = `${currentYear}年${currentMonthOfYear}月`;
+
+                schedule.push({
+                    month: currentMonth,
+                    date: dateStr,
+                    year: currentYear,
+                    monthOfYear: currentMonthOfYear,
+                    payment: monthlyPayment,
+                    principal: principalPart,
+                    interest: interest,
+                    remaining: remainingPrincipal,
+                    isPrepayment: isPrepayment,
+                    isRateChange: isRateChange,
+                    currentRate: currentMonthlyRate * 100 * 12
+                });
+
+                currentMonthOfYear++;
+                if (currentMonthOfYear > 12) {
+                    currentMonthOfYear = 1;
+                    currentYear++;
+                }
+                currentMonth++;
+            }
+
+            return schedule;
+        }
+
+        function renderTable(schedule) {
+            const tbody = document.getElementById('repaymentTable');
+            tbody.innerHTML = schedule.map(item => {
+                const principalPercent = item.payment > 0 ? (item.principal / item.payment * 100) : 0;
+                const interestPercent = 100 - principalPercent;
+                let highlightClass = '';
+                let tagText = '';
+                if (item.isPrepayment && item.isRateChange) {
+                    highlightClass = 'highlight';
+                    tagText = ' <strong>(提前还款+利率调整)</strong>';
+                } else if (item.isPrepayment) {
+                    highlightClass = 'highlight';
+                    tagText = ' <strong>(提前还款)</strong>';
+                } else if (item.isRateChange) {
+                    highlightClass = 'highlight-rate';
+                    tagText = ' <strong>(利率调整)</strong>';
+                }
+                return `
+                    <tr class="${highlightClass}">
+                        <td>${item.month}${tagText}</td>
+                        <td>${item.date}</td>
+                        <td>${item.currentRate.toFixed(4)}</td>
+                        <td>${item.payment.toFixed(2)}</td>
+                        <td>${item.principal.toFixed(2)}</td>
+                        <td>${item.interest.toFixed(2)}</td>
+                        <td>${item.remaining.toFixed(2)}</td>
+                        <td>
+                            <div>本金 ${principalPercent.toFixed(1)}% / 利息 ${interestPercent.toFixed(1)}%</div>
+                            <div class="progress-bar">
+                                <div class="principal" style="width: ${principalPercent}%"></div>
+                                <div class="interest" style="width: ${interestPercent}%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderChart(schedule) {
+            const chartBars = document.getElementById('chartBars');
+            
+            const maxPayment = Math.max(...schedule.map(item => item.payment));
+            const displayCount = Math.min(schedule.length, 200);
+            const step = Math.floor(schedule.length / displayCount);
+            
+            let html = '';
+            for (let i = 0; i < schedule.length; i += step) {
+                const item = schedule[i];
+                const principalHeight = (item.principal / maxPayment) * 100;
+                const interestHeight = (item.interest / maxPayment) * 100;
+                
+                html += `
+                    <div class="chart-bar-group">
+                        <div class="chart-bar" style="height: ${principalHeight}%"></div>
+                        <div class="chart-bar interest" style="height: ${interestHeight}%"></div>
+                    </div>
+                `;
+            }
+            chartBars.innerHTML = html;
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('tableContent').style.display = tabName === 'table' ? 'block' : 'none';
+            document.getElementById('echartsContent').style.display = tabName === 'echarts' ? 'block' : 'none';
+            document.getElementById('historyContent').style.display = tabName === 'history' ? 'block' : 'none';
+            
+            if (tabName === 'echarts' && window.currentSchedule) {
+                renderECharts(window.currentSchedule);
+            }
+        }
+
+        let calculationHistory = [];
+
+        function loadHistory() {
+            const saved = localStorage.getItem('loanCalculatorHistory');
+            if (saved) {
+                calculationHistory = JSON.parse(saved);
+            }
+        }
+
+        function saveHistory() {
+            localStorage.setItem('loanCalculatorHistory', JSON.stringify(calculationHistory));
+        }
+
+        function addToHistory(result) {
+            const historyItem = {
+                id: Date.now(),
+                time: new Date().toLocaleString('zh-CN'),
+                loanAmount: result.loanAmount,
+                annualRate: result.annualRate,
+                loanMonths: result.loanMonths,
+                startYear: result.startYear,
+                startMonth: result.startMonth,
+                prepayments: result.prepayments,
+                rateChanges: result.rateChanges,
+                originalInterest: result.originalInterest,
+                actualInterest: result.actualInterest,
+                savedInterest: result.savedInterest,
+                actualMonths: result.actualMonths
+            };
+            calculationHistory.unshift(historyItem);
+            if (calculationHistory.length > 50) {
+                calculationHistory = calculationHistory.slice(0, 50);
+            }
+            saveHistory();
+            renderHistoryCards();
+        }
+
+        function getDateFromPeriod(period, startYear, startMonth) {
+            let year = startYear + Math.floor((period - 1) / 12);
+            let month = startMonth + (period - 1) % 12;
+            if (month > 12) {
+                year++;
+                month -= 12;
+            }
+            return `${year}年${month}月`;
+        }
+
+        function renderHistoryCards() {
+            const container = document.getElementById('historyCards');
+            if (calculationHistory.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">暂无计算记录</div>';
+                return;
+            }
+            container.innerHTML = calculationHistory.map((item, index) => {
+                const prepayHtml = item.prepayments.length > 0 ? `
+                    <div class="info-row">
+                        <span class="label">提前还款</span>
+                        <span class="value" style="flex: 1; text-align: right;">${item.prepayments.length}条</span>
+                    </div>
+                    <div class="record-list">
+                        ${item.prepayments.map(p => `<div class="record-item">第${p.month}期(${getDateFromPeriod(p.month, item.startYear, item.startMonth)}) ¥${p.amount}万</div>`).join('')}
+                    </div>
+                ` : '';
+                
+                const rateHtml = item.rateChanges.length > 0 ? `
+                    <div class="info-row">
+                        <span class="label">利率调整</span>
+                        <span class="value" style="flex: 1; text-align: right;">${item.rateChanges.length}条</span>
+                    </div>
+                    <div class="record-list">
+                        ${item.rateChanges.map(r => `<div class="record-item">第${r.month}期(${getDateFromPeriod(r.month, item.startYear, item.startMonth)}) ${r.rate}%</div>`).join('')}
+                    </div>
+                ` : '';
+                
+                return `
+                    <div class="history-card">
+                        <div class="card-header">
+                            <span class="title">计算记录 #${index + 1}</span>
+                            <span class="time">${item.time}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-row">
+                                <span class="label">贷款金额</span>
+                                <span class="value">¥${item.loanAmount}万</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">贷款期限</span>
+                                <span class="value">${item.loanMonths}个月</span>
+                            </div>
+                            ${prepayHtml}
+                            ${rateHtml}
+                            <div class="info-row">
+                                <span class="label">原计划利息</span>
+                                <span class="value">¥${(item.originalInterest / 10000).toFixed(2)}万</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">实际利息</span>
+                                <span class="value highlight">¥${(item.actualInterest / 10000).toFixed(2)}万</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">节省利息</span>
+                                <span class="value saved">¥${(item.savedInterest / 10000).toFixed(2)}万</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">实际期数</span>
+                                <span class="value">${item.actualMonths}期</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary btn-xs" onclick="applyHistory(${item.id})">应用</button>
+                            <button class="btn btn-danger btn-xs" onclick="deleteHistory(${item.id})">删除</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function applyPreset(planId) {
+            const presets = {
+                plan1: {
+                    loanAmount: 50,
+                    annualRate: 4.9,
+                    loanMonths: 180,
+                    startYear: 2024,
+                    startMonth: 1,
+                    prepayments: [
+                        { month: 36, amount: 10 },
+                        { month: 72, amount: 15 }
+                    ],
+                    rateChanges: []
+                },
+                plan2: {
+                    loanAmount: 50,
+                    annualRate: 4.9,
+                    loanMonths: 240,
+                    startYear: 2024,
+                    startMonth: 1,
+                    prepayments: [
+                        { month: 48, amount: 10 },
+                        { month: 96, amount: 15 }
+                    ],
+                    rateChanges: []
+                },
+                plan3: {
+                    loanAmount: 80,
+                    annualRate: 4.9,
+                    loanMonths: 180,
+                    startYear: 2024,
+                    startMonth: 1,
+                    prepayments: [
+                        { month: 24, amount: 15 },
+                        { month: 48, amount: 20 },
+                        { month: 96, amount: 25 }
+                    ],
+                    rateChanges: []
+                },
+                plan4: {
+                    loanAmount: 80,
+                    annualRate: 4.9,
+                    loanMonths: 240,
+                    startYear: 2024,
+                    startMonth: 1,
+                    prepayments: [
+                        { month: 36, amount: 15 },
+                        { month: 72, amount: 20 },
+                        { month: 120, amount: 25 }
+                    ],
+                    rateChanges: []
+                },
+                plan5: {
+                    loanAmount: 100,
+                    annualRate: 4.9,
+                    loanMonths: 180,
+                    startYear: 2024,
+                    startMonth: 1,
+                    prepayments: [
+                        { month: 24, amount: 20 },
+                        { month: 48, amount: 25 },
+                        { month: 96, amount: 30 }
+                    ],
+                    rateChanges: []
+                },
+                plan6: {
+                    loanAmount: 100,
+                    annualRate: 4.9,
+                    loanMonths: 240,
+                    startYear: 2024,
+                    startMonth: 1,
+                    prepayments: [
+                        { month: 36, amount: 20 },
+                        { month: 72, amount: 25 },
+                        { month: 120, amount: 30 }
+                    ],
+                    rateChanges: []
+                }
+            };
+
+            const plan = presets[planId];
+            if (!plan) return;
+
+            document.getElementById('loanAmount').value = plan.loanAmount;
+            document.getElementById('annualRate').value = plan.annualRate;
+            document.getElementById('loanMonths').value = plan.loanMonths;
+            document.getElementById('startYear').value = plan.startYear;
+            document.getElementById('startMonth').value = plan.startMonth;
+
+            prepayments.length = 0;
+            plan.prepayments.forEach(p => prepayments.push({...p}));
+            renderPrepayments();
+
+            rateChanges.length = 0;
+            plan.rateChanges.forEach(r => rateChanges.push({...r}));
+            renderRateChanges();
+
+            updatePrepayPeriod();
+            updateRatePeriod();
+
+            calculate();
+        }
+
+        function applyHistory(id) {
+            const item = calculationHistory.find(h => h.id === id);
+            if (!item) return;
+
+            document.getElementById('loanAmount').value = item.loanAmount;
+            document.getElementById('annualRate').value = item.annualRate;
+            document.getElementById('loanMonths').value = item.loanMonths;
+            document.getElementById('startYear').value = item.startYear;
+            document.getElementById('startMonth').value = item.startMonth;
+
+            prepayments.length = 0;
+            item.prepayments.forEach(p => prepayments.push({...p}));
+            renderPrepayments();
+
+            rateChanges.length = 0;
+            item.rateChanges.forEach(r => rateChanges.push({...r}));
+            renderRateChanges();
+
+            calculate();
+            showTab('table');
+        }
+
+        function deleteHistory(id) {
+            calculationHistory = calculationHistory.filter(h => h.id !== id);
+            saveHistory();
+            renderHistoryCards();
+        }
+
+        function clearHistory() {
+            if (!confirm('确定要清空所有历史记录吗？')) return;
+            calculationHistory = [];
+            saveHistory();
+            renderHistoryCards();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHistory();
+            renderHistoryCards();
+        });
+
+        function renderECharts(schedule) {
+            const displayData = schedule;
+            
+            const xAxisData = displayData.map(item => `${item.month}期-${item.date}`);
+            const remainingPrincipal = displayData.map(item => item.remaining / 10000);
+            const principal = displayData.map(item => item.principal / 10000);
+            const interest = displayData.map(item => item.interest / 10000);
+
+            const mainChart = echarts.init(document.getElementById('mainChart'));
+            const mainOption = {
+                title: {
+                    text: '贷款余额与还款分析',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    },
+                    formatter: function(params) {
+                        let result = params[0].axisValue + '<br/>';
+                        params.forEach(item => {
+                            result += `${item.marker} ${item.seriesName}: ¥${item.value.toFixed(2)}万元<br/>`;
+                        });
+                        return result;
+                    }
+                },
+                legend: {
+                    data: ['剩余本金', '本期本金', '本期利息'],
+                    top: 30
+                },
+                grid: {
+                    left: '8%',
+                    right: '12%',
+                    bottom: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: xAxisData,
+                    axisLabel: {
+                        rotate: 45,
+                        fontSize: 10
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '金额（万元）'
+                },
+                dataZoom: [
+                    {
+                        type: 'inside',
+                        start: 0,
+                        end: 100,
+                        zoomLock: false
+                    },
+                    {
+                        type: 'slider',
+                        start: 0,
+                        end: 100,
+                        height: 20,
+                        bottom: 10,
+                        borderColor: '#ddd',
+                        fillerColor: 'rgba(102, 126, 234, 0.2)',
+                        handleStyle: {
+                            color: '#667eea'
+                        }
+                    }
+                ],
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none',
+                            title: {
+                                zoom: '区域缩放',
+                                back: '重置缩放'
+                            }
+                        },
+                        restore: {
+                            title: '还原'
+                        }
+                    },
+                    top: 10,
+                    right: 10
+                },
+                series: [
+                    {
+                        name: '剩余本金',
+                        type: 'bar',
+                        data: remainingPrincipal,
+                        itemStyle: {
+                            color: '#667eea'
+                        }
+                    },
+                    {
+                        name: '本期本金',
+                        type: 'bar',
+                        data: principal,
+                        itemStyle: {
+                            color: '#10b981'
+                        }
+                    },
+                    {
+                        name: '本期利息',
+                        type: 'bar',
+                        data: interest,
+                        itemStyle: {
+                            color: '#f59e0b'
+                        }
+                    }
+                ]
+            };
+            mainChart.setOption(mainOption);
+
+            const stackedChart = echarts.init(document.getElementById('stackedChart'));
+            const stackedOption = {
+                title: {
+                    text: '本金与利息累计占比',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    },
+                    formatter: function(params) {
+                        const total = params.reduce((sum, item) => sum + item.value, 0);
+                        let result = params[0].axisValue + '<br/>';
+                        params.forEach(item => {
+                            const percent = ((item.value / total) * 100).toFixed(1);
+                            result += `${item.marker} ${item.seriesName}: ¥${item.value.toFixed(2)}万元 (${percent}%)<br/>`;
+                        });
+                        return result;
+                    }
+                },
+                legend: {
+                    data: ['累计本金', '累计利息'],
+                    top: 30
+                },
+                grid: {
+                    left: '8%',
+                    right: '12%',
+                    bottom: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: xAxisData,
+                    axisLabel: {
+                        rotate: 45,
+                        fontSize: 10
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '累计金额（万元）'
+                },
+                dataZoom: [
+                    {
+                        type: 'inside',
+                        start: 0,
+                        end: 100,
+                        zoomLock: false
+                    },
+                    {
+                        type: 'slider',
+                        start: 0,
+                        end: 100,
+                        height: 20,
+                        bottom: 10,
+                        borderColor: '#ddd',
+                        fillerColor: 'rgba(102, 126, 234, 0.2)',
+                        handleStyle: {
+                            color: '#667eea'
+                        }
+                    }
+                ],
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none',
+                            title: {
+                                zoom: '区域缩放',
+                                back: '重置缩放'
+                            }
+                        },
+                        restore: {
+                            title: '还原'
+                        }
+                    },
+                    top: 10,
+                    right: 10
+                },
+                series: [
+                    {
+                        name: '累计本金',
+                        type: 'bar',
+                        stack: 'total',
+                        data: displayData.map((_, index) => {
+                            return displayData.slice(0, index + 1).reduce((sum, item) => sum + item.principal, 0) / 10000;
+                        }),
+                        itemStyle: {
+                            color: '#10b981'
+                        }
+                    },
+                    {
+                        name: '累计利息',
+                        type: 'bar',
+                        stack: 'total',
+                        data: displayData.map((_, index) => {
+                            return displayData.slice(0, index + 1).reduce((sum, item) => sum + item.interest, 0) / 10000;
+                        }),
+                        itemStyle: {
+                            color: '#f59e0b'
+                        }
+                    }
+                ]
+            };
+            stackedChart.setOption(stackedOption);
+
+            window.addEventListener('resize', function() {
+                mainChart.resize();
+                stackedChart.resize();
+            });
+        }
+
+        function formatMoney(value) {
+            return '¥' + value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+    </script>
+</body>
+</html>
