@@ -378,8 +378,8 @@
 
         .preset-plans {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
         }
 
         .preset-btn {
@@ -658,6 +658,16 @@
             .btn {
                 width: 100%;
             }
+
+            .preset-plans {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .preset-plans {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -698,8 +708,6 @@
                     <div class="preset-desc">利率4.9% · 3次提前还款</div>
                 </button>
             </div>
-        </div>
-            <p>支持提前还款计算，展示每期还款详情</p>
         </div>
 
         <div class="card">
